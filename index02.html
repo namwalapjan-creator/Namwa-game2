@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>นักสืบรหัสลับใต้ทะเล Level 02</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Tahoma,sans-serif;
+  color:#eaffff;
+  min-height:100vh;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000' viewBox='0 0 1600 1000'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23011b3d'/><stop offset='.42' stop-color='%23002648'/><stop offset='1' stop-color='%2300061a'/></linearGradient><radialGradient id='glow' cx='.5' cy='.2' r='.65'><stop offset='0' stop-color='%2300d5ff' stop-opacity='.35'/><stop offset='1' stop-color='%23000000' stop-opacity='0'/></radialGradient></defs><rect width='1600' height='1000' fill='url(%23g)'/><rect width='1600' height='1000' fill='url(%23glow)'/><path d='M0 770 C250 690 410 810 610 735 C850 650 1040 815 1260 735 C1430 675 1540 735 1600 700 L1600 1000 L0 1000 Z' fill='%23001229'/><g font-size='78'><text x='80' y='835'>🦈</text><text x='310' y='900'>🦑</text><text x='550' y='825'>🐙</text><text x='795' y='900'>🐡</text><text x='1020' y='840'>🪼</text><text x='1240' y='910'>🦀</text><text x='1440' y='840'>🐍</text></g><g opacity='.7'><circle cx='230' cy='180' r='8' fill='%2380f7ff'/><circle cx='320' cy='260' r='5' fill='%2380f7ff'/><circle cx='1200' cy='180' r='7' fill='%2380f7ff'/><circle cx='1320' cy='300' r='5' fill='%2380f7ff'/><circle cx='740' cy='170' r='6' fill='%2380f7ff'/></g><path d='M1160 315 l120 -65 l-55 150 z' fill='%2300152b' opacity='.65'/><path d='M1210 290 l25 220' stroke='%23002948' stroke-width='8' opacity='.7'/></svg>")
+    center/cover fixed no-repeat;
+}
+.wrap{max-width:980px;margin:auto;padding:18px}
+.card{background:rgba(1,17,38,.65);border:3px solid rgba(0,220,255,.35);border-radius:28px;padding:24px;box-shadow:0 0 28px rgba(0,230,255,.25)}
+h1{text-align:center;color:#8df6ff;text-shadow:0 0 10px rgba(0,255,255,.55)}
+h2,h3{color:#9df7ff}
+.center{text-align:center}
+button{margin:10px;padding:13px 26px;font-size:19px;border:0;border-radius:16px;background:#0077aa;color:white;cursor:pointer;box-shadow:0 0 12px rgba(0,220,255,.35)}
+button:hover{background:#0096c7}
+.backBtn{background:#4655a8}
+.loginInput{width:88%;max-width:430px;height:48px;font-size:20px;padding:6px 14px;border-radius:14px;border:2px solid #00d5ff;margin:8px;text-align:center;background:#f4feff;color:#003a50}
+.box{background:rgba(0,87,122,.28);border-left:8px solid #00d5ff;border-radius:16px;padding:14px 16px;margin:12px 0;line-height:1.65;color:#f4feff}
+.lesson-title{text-align:center;background:linear-gradient(90deg,rgba(0,145,180,.55),rgba(0,30,60,.8),rgba(0,145,180,.55));border-radius:18px;padding:14px;margin-bottom:14px}
+.qrBox{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;background:rgba(0,41,74,.85);border-radius:18px;padding:16px;border:2px dashed #00d5ff;margin:14px 0}
+.qrBox img{width:180px;height:180px;background:white;padding:8px;border-radius:12px}
+.linkText{word-break:break-all;font-size:16px}
+a{color:#a7fbff}
+.info{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:20px;font-weight:bold;gap:10px;margin-bottom:15px;color:#f2ffff}
+.levelBox{background:rgba(0,67,97,.55);padding:15px;border-radius:18px;margin-bottom:15px;border:1px solid rgba(0,213,255,.28)}
+table{width:100%;border-collapse:collapse;margin-top:10px;background:rgba(255,255,255,.96);color:#00394d}
+th{background:#004e70;color:white}
+td,th{border:1px solid #83ddeb;padding:10px;text-align:center}
+.codeInput{width:74px;height:74px;font-size:38px;text-align:center;border-radius:16px;border:3px solid #00d5ff;margin:5px;background:#fff;color:#00394d}
+#msg{font-size:24px;font-weight:bold;margin-top:15px;text-align:center}
+.success{color:#00ff9d}.fail{color:#ff7979}.small{font-size:16px;color:#d5f9ff}
+
+/* Vocabulary forest screen */
+.vocabScreen{
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='1000' viewBox='0 0 1600 1000'><defs><linearGradient id='g' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23b8f7a5'/><stop offset='.55' stop-color='%23eaffd7'/><stop offset='1' stop-color='%23fff6d6'/></linearGradient></defs><rect width='1600' height='1000' fill='url(%23g)'/><circle cx='170' cy='120' r='55' fill='%23fff38a'/><path d='M0 680 C200 600 390 705 580 650 C790 585 980 710 1180 650 C1370 590 1510 640 1600 600 L1600 1000 L0 1000 Z' fill='%238fd16a'/><path d='M0 760 C220 690 430 805 620 740 C840 665 1050 800 1260 730 C1430 675 1540 720 1600 690 L1600 1000 L0 1000 Z' fill='%2356b55a'/><g font-size='72'><text x='95' y='835'>🦊</text><text x='310' y='885'>🐰</text><text x='520' y='825'>🐻</text><text x='750' y='900'>🦌</text><text x='1000' y='845'>🐿️</text><text x='1220' y='910'>🦉</text><text x='1430' y='835'>🦔</text></g></svg>")
+    center/cover no-repeat;
+  border-radius:22px;
+  padding:20px;
+}
+.vocabTitle{text-align:center;color:#1b7f36;background:rgba(255,255,255,.9);border-radius:20px;padding:14px;margin-bottom:14px}
+.vocabBoard{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.vocabColumn{background:rgba(255,255,255,.92);border-radius:18px;padding:14px;border:3px solid rgba(54,150,64,.25);color:#155724}
+.vocabBtn{display:block;width:100%;margin:10px 0;padding:14px 10px;border-radius:16px;border:3px solid #55b86a;background:white;color:#155724;font-size:20px;font-weight:bold;cursor:pointer;box-shadow:0 3px 9px rgba(0,0,0,.12)}
+.vocabBtn.selected{background:#fff7c7;border-color:#f2b705}
+.vocabBtn.correct{background:#c8f7c5;border-color:#149447;color:#0b5c22;cursor:not-allowed}
+.vocabBtn.wrong{background:#ffd1d1;border-color:#e60000;color:#9b0000;animation:blinkWrong .25s alternate 6}
+@keyframes blinkWrong{from{transform:scale(1);opacity:1}to{transform:scale(1.05);opacity:.55}}
+@media(max-width:700px){.vocabBoard{grid-template-columns:1fr}.vocabBtn{font-size:18px}.codeInput{width:60px;height:60px;font-size:32px}.qrBox img{width:150px;height:150px}}
+</style>
+
+<style>
+/* แก้สีตัวอักษรหน้าเกมคำศัพท์ให้ชัดขึ้น */
+.vocabTitle h1,
+.vocabTitle h2,
+.vocabColumn h2{
+  color:#8B0000 !important;
+  text-shadow:none !important;
+}
+.vocabTitle p{
+  color:#064d1f !important;
+}
+</style>
+
+
+<style>
+/* OBEC_FINAL_COLOR_FIX */
+.vocabTitle h1,
+.vocabTitle h2,
+.vocabColumn h2{
+color:#8B0000 !important;
+}
+</style>
+
+<style>
+/* QR_LINK_LAYOUT_FIX */
+.qrBox{
+  display:flex !important;
+  gap:18px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  flex-wrap:wrap !important;
+  background:rgba(255,248,219,.94) !important;
+  border-radius:18px !important;
+  padding:16px !important;
+  border:2px dashed #00a8cc !important;
+  margin:14px 0 !important;
+  color:#064663 !important;
+}
+.qrBox img{
+  width:180px !important;
+  height:180px !important;
+  background:white !important;
+  padding:8px !important;
+  border-radius:12px !important;
+}
+.qrBox h3{
+  color:#0077aa !important;
+  margin:0 0 10px 0 !important;
+}
+.qrBox .linkText{
+  margin:0 !important;
+  word-break:normal !important;
+}
+.qrBox .lessonLinkBtn{
+  display:inline-block !important;
+  padding:12px 18px !important;
+  border-radius:14px !important;
+  background:#00a8cc !important;
+  color:white !important;
+  text-decoration:none !important;
+  font-weight:bold !important;
+  box-shadow:0 4px 10px rgba(0,120,150,.25) !important;
+}
+.qrBox .lessonLinkBtn:hover{
+  background:#008fb0 !important;
+}
+</style>
+
+
+<style>
+/* FINAL_LESSON_LINK_BUTTON_FIX */
+.lessonLinkBtn{
+  display:inline-block !important;
+  padding:12px 20px !important;
+  border-radius:14px !important;
+  background:#00a8cc !important;
+  color:#ffffff !important;
+  border:none !important;
+  font-size:18px !important;
+  font-weight:bold !important;
+  cursor:pointer !important;
+  box-shadow:0 4px 10px rgba(0,120,150,.25) !important;
+}
+.lessonLinkBtn:hover{
+  background:#008fb0 !important;
+}
+</style>
+
+</head>
+
+<body>
+<style>
+.deepSeaAnimals{
+position:fixed;
+width:100%;
+height:100%;
+left:0;
+top:0;
+z-index:-1;
+overflow:hidden;
+background:radial-gradient(circle,#075b83,#001428 70%);
+}
+.deepSeaAnimals div{
+position:absolute;
+filter:drop-shadow(0 0 25px cyan);
+}
+.bigShark{font-size:180px;right:5%;top:18%}
+.bigOctopus{font-size:170px;left:5%;bottom:8%}
+.bigSquid{font-size:130px;right:18%;bottom:10%}
+.bigJelly{font-size:130px;left:15%;top:15%}
+</style>
+<div class="deepSeaAnimals">
+<div class="bigShark">🦈</div>
+<div class="bigOctopus">🐙</div>
+<div class="bigSquid">🦑</div>
+<div class="bigJelly">🪼</div>
+</div>
+
+<div class="wrap">
+<div class="card" id="mainCard">
+
+<section id="lessonPage">
+  <h1>🦈 นักสืบรหัสลับใต้ทะเล Level 02 🔐</h1>
+  <div class="lesson-title">
+    <h2>แผนการจัดการเรียนรู้ที่ 1</h2>
+    <p><b>เรื่อง:</b> การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ &nbsp; <b>เวลา:</b> 1 ชั่วโมง</p>
+  </div>
+  <div class="box">
+    <p><b>หน่วยการเรียนรู้ที่ 1:</b> การแก้ปัญหาโดยใช้เหตุผลเชิงตรรกะ</p>
+    <p><b>กลุ่มสาระการเรียนรู้:</b> วิทยาศาสตร์และเทคโนโลยี</p>
+    <p><b>เรื่อง:</b> การทำนายผลลัพธ์จากปัญหาอย่างง่าย</p>
+    <p><b>ชั้น:</b> ประถมศึกษาปีที่ 5 | <b>สาระที่ 4:</b> เทคโนโลยี | <b>มาตรฐาน/ตัวชี้วัด:</b> ว 4.2 ป.5/1</p>
+  </div>
+  <div class="box">
+    <h3>ตัวชี้วัด</h3>
+    <p>ว 4.2 ป.5/1 ใช้เหตุผลเชิงตรรกะในการแก้ปัญหา การอธิบายการทำงาน การคาดการณ์ผลลัพธ์จากปัญหาอย่างง่าย</p>
+  </div>
+  <div class="box">
+    <h3>สาระสำคัญ/ความคิดรวบยอด</h3>
+    <p>การคาดการณ์ผลลัพธ์โดยใช้เหตุผลเชิงตรรกะ เป็นการพิจารณากฎเกณฑ์หรือเงื่อนไขจากรูปแบบของเหตุการณ์ เพื่อใช้เป็นเหตุผลหรือตรรกะในการคาดการณ์ผลลัพธ์ที่อาจเกิดขึ้น</p>
+  </div>
+  <div class="box">
+    <h3>จุดประสงค์การเรียนรู้</h3>
+    <ol>
+      <li>นักเรียนสามารถคาดการณ์ผลลัพธ์จากรูปแบบที่เคยเกิดขึ้นได้ (K)</li>
+      <li>นักเรียนสามารถตรวจสอบความถูกต้องโดยใช้เหตุผลเชิงตรรกะได้ (S)</li>
+      <li>นักเรียนเห็นประโยชน์ของการคาดการณ์ผลลัพธ์โดยใช้เหตุผลเชิงตรรกะ (A)</li>
+    </ol>
+  </div>
+  <div class="qrBox">
+    <img src="data:image/png;base64,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" alt="QR Code แผนการจัดการเรียนรู้">
+    <div>
+      <h3>Link และ QR Code แผนการจัดการเรียนรู้</h3>
+      <p class="linkText">
+<button type="button" class="lessonLinkBtn" onclick="openLessonPlan()">เปิดแผนการจัดการเรียนรู้</button>
+</p>
+    </div>
+  </div>
+  <div class="center"><button onclick="showLogin()">เข้าใจแล้ว</button></div>
+</section>
+
+<section id="loginPage" style="display:none">
+  <h1>🦈 นักสืบรหัสลับใต้ทะเล Level 02 🔐</h1>
+  <div class="center">
+    <h2>กรอกข้อมูลก่อนเริ่มเกม</h2>
+    <input id="playerInput" class="loginInput" type="text" placeholder="ชื่อผู้เล่น">
+    <br>
+    <input id="classInput" class="loginInput" type="text" placeholder="ชั้นเรียน เช่น ป.5/1">
+    <br>
+    <button class="backBtn" onclick="showLesson()">ย้อนกลับ</button>
+    <button onclick="startGame()">🚀 เริ่มภารกิจ</button>
+  </div>
+</section>
+
+<section id="gamePage" style="display:none"></section>
+
+</div>
+</div>
+
+<script>
+const levels=[
+{code:"290",title:"ข้อที่ 1 🐡 ร่องทะเลมืด",clues:[["218","มี 1 ตัวถูกและตำแหน่งถูก"],["136","ไม่มีตัวเลขใดถูก"],["095","มี 1 ตัวถูกและตำแหน่งถูก และมี 1 ตัวถูกแต่ตำแหน่งผิด"],["036","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["574","ไม่มีตัวเลขใดถูก"]]},
+{code:"746",title:"ข้อที่ 2 🦈 ถ้ำฉลามเงา",clues:[["357","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["674","มี 3 ตัวถูกแต่ตำแหน่งผิด"],["397","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["135","ไม่มีตัวเลขใดถูก"],["781","มี 1 ตัวถูกและตำแหน่งถูก"]]},
+{code:"581",title:"ข้อที่ 3 🦑 เขตหมึกยักษ์",clues:[["721","มี 1 ตัวถูกและตำแหน่งถูก"],["279","ไม่มีตัวเลขใดถูก"],["590","มี 1 ตัวถูกและตำแหน่งถูก"],["603","ไม่มีตัวเลขใดถูก"],["847","มี 1 ตัวถูกแต่ตำแหน่งผิด"]]},
+{code:"639",title:"ข้อที่ 4 🪼 เมืองแมงกะพรุนเรืองแสง",clues:[["430","มี 1 ตัวถูกและตำแหน่งถูก"],["371","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["065","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["125","ไม่มีตัวเลขใดถูก"],["069","มี 1 ตัวถูกและตำแหน่งถูก และมี 1 ตัวถูกแต่ตำแหน่งผิด"]]},
+{code:"804",title:"ข้อที่ 5 🐙 ประตูอสูรทะเลลึก",clues:[["651","ไม่มีตัวเลขใดถูก"],["892","มี 1 ตัวถูกและตำแหน่งถูก"],["398","มี 1 ตัวถูกแต่ตำแหน่งผิด"],["734","มี 1 ตัวถูกและตำแหน่งถูก"],["753","ไม่มีตัวเลขใดถูก"]]}
+];
+
+const vocabWords=[
+{en:"Computer",th:"คอมพิวเตอร์"},{en:"Monitor",th:"จอภาพ"},{en:"Keyboard",th:"แป้นพิมพ์"},{en:"Mouse",th:"เมาส์"},{en:"Printer",th:"เครื่องพิมพ์"},
+{en:"Speaker",th:"ลำโพง"},{en:"Microphone",th:"ไมโครโฟน"},{en:"Camera",th:"กล้อง"},{en:"Scanner",th:"เครื่องสแกน"},{en:"Projector",th:"เครื่องฉายภาพ"},
+{en:"CPU",th:"หน่วยประมวลผลกลาง"},{en:"Memory",th:"หน่วยความจำ"},{en:"RAM",th:"หน่วยความจำชั่วคราว"},{en:"Hard Disk",th:"ฮาร์ดดิสก์"},{en:"Flash Drive",th:"แฟลชไดรฟ์"},
+{en:"USB",th:"ช่องเชื่อมต่อยูเอสบี"},{en:"Battery",th:"แบตเตอรี่"},{en:"Charger",th:"ที่ชาร์จ"},{en:"Touch Screen",th:"หน้าจอสัมผัส"},{en:"Headphone",th:"หูฟัง"},
+{en:"Hardware",th:"ฮาร์ดแวร์"},{en:"Software",th:"ซอฟต์แวร์"},{en:"Program",th:"โปรแกรม"},{en:"Application",th:"แอปพลิเคชัน"},{en:"Operating System",th:"ระบบปฏิบัติการ"},
+{en:"Icon",th:"ไอคอน"},{en:"Window",th:"หน้าต่างโปรแกรม"},{en:"Menu",th:"เมนู"},{en:"Button",th:"ปุ่ม"},{en:"Setting",th:"การตั้งค่า"},
+{en:"File",th:"แฟ้มข้อมูล"},{en:"Folder",th:"โฟลเดอร์"},{en:"Document",th:"เอกสาร"},{en:"Image",th:"รูปภาพ"},{en:"Video",th:"วิดีโอ"},
+{en:"Audio",th:"เสียง"},{en:"Save",th:"บันทึก"},{en:"Open",th:"เปิด"},{en:"Close",th:"ปิด"},{en:"Delete",th:"ลบ"},
+{en:"Copy",th:"คัดลอก"},{en:"Paste",th:"วาง"},{en:"Cut",th:"ตัด"},{en:"Undo",th:"ย้อนกลับ"},{en:"Redo",th:"ทำซ้ำ"},
+{en:"Print",th:"พิมพ์"},{en:"Edit",th:"แก้ไข"},{en:"Insert",th:"แทรก"},{en:"Select",th:"เลือก"},{en:"Search",th:"ค้นหา"},
+{en:"Internet",th:"อินเทอร์เน็ต"},{en:"Website",th:"เว็บไซต์"},{en:"Browser",th:"เว็บเบราว์เซอร์"},{en:"Google",th:"เครื่องมือค้นหา"},{en:"Email",th:"อีเมล"},
+{en:"Download",th:"ดาวน์โหลด"},{en:"Upload",th:"อัปโหลด"},{en:"Link",th:"ลิงก์"},{en:"Wi-Fi",th:"ไวไฟ"},{en:"Network",th:"เครือข่าย"},
+{en:"Username",th:"ชื่อผู้ใช้"},{en:"Password",th:"รหัสผ่าน"},{en:"Login",th:"เข้าสู่ระบบ"},{en:"Logout",th:"ออกจากระบบ"},{en:"Privacy",th:"ความเป็นส่วนตัว"},
+{en:"Security",th:"ความปลอดภัย"},{en:"Virus",th:"ไวรัสคอมพิวเตอร์"},{en:"Backup",th:"สำรองข้อมูล"},{en:"Update",th:"อัปเดต"},{en:"Cloud",th:"คลาวด์"},
+{en:"Data",th:"ข้อมูล"},{en:"Information",th:"สารสนเทศ"},{en:"Input",th:"ข้อมูลนำเข้า"},{en:"Output",th:"ผลลัพธ์"},{en:"Process",th:"ประมวลผล"},
+{en:"Problem",th:"ปัญหา"},{en:"Solution",th:"วิธีแก้ปัญหา"},{en:"Algorithm",th:"ขั้นตอนวิธี"},{en:"Logic",th:"เหตุผลเชิงตรรกะ"},{en:"Pattern",th:"รูปแบบ"},
+{en:"Sequence",th:"ลำดับขั้นตอน"},{en:"Command",th:"คำสั่ง"},{en:"Code",th:"รหัสคำสั่ง"},{en:"Coding",th:"การเขียนโปรแกรม"},{en:"Debug",th:"แก้ไขข้อผิดพลาด"},
+{en:"Error",th:"ข้อผิดพลาด"},{en:"Loop",th:"การทำซ้ำ"},{en:"Condition",th:"เงื่อนไข"},{en:"Variable",th:"ตัวแปร"},{en:"Function",th:"ฟังก์ชัน"},
+{en:"Robot",th:"หุ่นยนต์"},{en:"AI",th:"ปัญญาประดิษฐ์"},{en:"Digital",th:"ดิจิทัล"},{en:"Technology",th:"เทคโนโลยี"},{en:"QR Code",th:"คิวอาร์โค้ด"},
+{en:"Tablet",th:"แท็บเล็ต"},{en:"Smartphone",th:"สมาร์ตโฟน"},{en:"Laptop",th:"คอมพิวเตอร์พกพา"},{en:"Presentation",th:"งานนำเสนอ"},{en:"Spreadsheet",th:"ตารางคำนวณ"}
+];
+
+let levelIndex=0, score=0, timeLeft=120, timer=null;
+let playerName="", classRoom="", startTime=null, wrongCount=0;
+let usedVocabIndexes=[], selectedEnglish=null, matchedCount=0;
+
+function showLesson(){lessonPage.style.display="block";loginPage.style.display="none";gamePage.style.display="none";}
+function showLogin(){playStart();lessonPage.style.display="none";loginPage.style.display="block";gamePage.style.display="none";}
+function showGame(){lessonPage.style.display="none";loginPage.style.display="none";gamePage.style.display="block";}
+
+function beep(freq,duration=0.18,type="sine"){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type=type; osc.frequency.value=freq;
+    osc.connect(gain); gain.connect(ctx.destination);
+    gain.gain.setValueAtTime(0.12,ctx.currentTime);
+    osc.start();
+    gain.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+duration);
+    osc.stop(ctx.currentTime+duration);
+  }catch(e){}
+}
+function melody(notes){notes.forEach((n,i)=>setTimeout(()=>beep(n),i*160));}
+function playStart(){melody([260,390,520]);}
+function playCorrect(){melody([660,880,1040]);}
+function playWrong(){melody([260,200]);}
+function playTimeUp(){melody([330,260,190]);}
+function playFinish(){melody([520,660,780,1040,880,1040]);}
+function playType(){beep(560,0.07,"triangle");}
+
+function speakText(text,lang){
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=lang;
+    u.rate=0.85;
+    u.pitch=1.05;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+
+function startGame(){
+  playerName=document.getElementById("playerInput").value.trim();
+  classRoom=document.getElementById("classInput").value.trim();
+  if(!playerName || !classRoom){
+    alert("กรุณากรอกชื่อผู้เล่นและชั้นเรียนก่อนเริ่มเกม");
+    return;
+  }
+  levelIndex=0; score=0; wrongCount=0; usedVocabIndexes=[];
+  startTime=new Date();
+  showGame();
+  renderDetectiveGame();
+  loadDetectiveLevel();
+  startTimer();
+  playStart();
+}
+
+function renderDetectiveGame(){
+  gamePage.innerHTML=`
+    <h1>🦈 นักสืบรหัสลับใต้ทะเล Level 02 🔐</h1>
+    <div class="info">
+      <div>👤 ${playerName}</div>
+      <div>🏫 ${classRoom}</div>
+      <div>🏆 คะแนน: <span id="scoreText">${score}</span></div>
+      <div>🎮 ด่าน: <span id="levelText">${levelIndex+1}</span>/5</div>
+      <div>⏱️ เวลา: <span id="timeText">120</span> วินาที</div>
+    </div>
+    <div id="clueArea"></div>
+    <div class="center">
+      <h2>กรอกรหัส 3 หลัก</h2>
+      <input id="digit1" maxlength="1" class="codeInput" inputmode="numeric">
+      <input id="digit2" maxlength="1" class="codeInput" inputmode="numeric">
+      <input id="digit3" maxlength="1" class="codeInput" inputmode="numeric">
+      <br>
+      <button onclick="checkDetectiveAnswer()">🔍 ตรวจคำตอบ</button>
+    </div>
+    <div id="msg"></div>
+  `;
+}
+
+function loadDetectiveLevel(){
+  wrongCount=0;
+  document.getElementById("levelText").textContent=levelIndex+1;
+  document.getElementById("scoreText").textContent=score;
+  const lv=levels[levelIndex];
+  let html=`<div class="levelBox"><h2>${lv.title}</h2><table><tr><th>เลขข้อ</th><th>ตัวเลข</th><th>คำใบ้</th></tr>`;
+  lv.clues.forEach((c,i)=>{html+=`<tr><td>${i+1}</td><td>${c[0]}</td><td>${c[1]}</td></tr>`;});
+  html+="</table></div>";
+  document.getElementById("clueArea").innerHTML=html;
+  document.getElementById("msg").innerHTML="";
+  ["digit1","digit2","digit3"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("digit1").focus();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timeLeft=120;
+  document.getElementById("timeText").textContent=timeLeft;
+  timer=setInterval(()=>{
+    timeLeft--;
+    const t=document.getElementById("timeText");
+    if(t) t.textContent=timeLeft;
+    if(timeLeft<=0) showTimeUp();
+  },1000);
+}
+
+function checkDetectiveAnswer(){
+  const ans=document.getElementById("digit1").value+document.getElementById("digit2").value+document.getElementById("digit3").value;
+  if(ans.length<3){
+    document.getElementById("msg").innerHTML="<span class='fail'>กรุณากรอกรหัสให้ครบ 3 หลัก</span>";
+    return;
+  }
+  if(ans===levels[levelIndex].code){
+    let point=10;
+    if(wrongCount===1) point=8;
+    if(wrongCount===2) point=6;
+    if(wrongCount>=3) point=5;
+    score+=point;
+    document.getElementById("scoreText").textContent=score;
+    document.getElementById("msg").innerHTML=`<span class='success'>🎉 ถูกต้อง! ได้ ${point} คะแนน</span>`;
+    playCorrect();
+    levelIndex++;
+    clearInterval(timer);
+    setTimeout(()=>{
+      if(levelIndex>=levels.length) finishGame();
+      else renderVocabGame();
+    },1000);
+  }else{
+    wrongCount++;
+    document.getElementById("msg").innerHTML="<span class='fail'>❌ ยังไม่ถูก ลองใหม่อีกครั้ง</span>";
+    playWrong();
+    speakText("ไม่ถูกต้อง","th-TH");
+  }
+}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function getRandomVocab(){
+  if(usedVocabIndexes.length>vocabWords.length-3) usedVocabIndexes=[];
+  const picked=[];
+  while(picked.length<3){
+    const idx=Math.floor(Math.random()*vocabWords.length);
+    if(!usedVocabIndexes.includes(idx) && !picked.includes(idx)){
+      picked.push(idx);
+      usedVocabIndexes.push(idx);
+    }
+  }
+  return picked.map(i=>vocabWords[i]);
+}
+
+function renderVocabGame(){
+  selectedEnglish=null;
+  matchedCount=0;
+  const pairs=getRandomVocab();
+  const enList=shuffle(pairs);
+  const thList=shuffle(pairs);
+
+  const enButtons=enList.map(item=>`
+    <button class="vocabBtn" data-key="${item.en}" onclick="selectEnglish(this, '${item.en.replace(/'/g,"\'")}')">${item.en}</button>
+  `).join("");
+
+  const thButtons=thList.map(item=>`
+    <button class="vocabBtn" data-key="${item.en}" onclick="selectThai(this, '${item.th.replace(/'/g,"\'")}')">${item.th}</button>
+  `).join("");
+
+  gamePage.innerHTML=`
+    <div class="vocabScreen">
+      <div class="vocabTitle">
+        <h1>คำศัพท์ต้องรู้!! 🌳</h1>
+        <h2>จับคู่คำศัพท์ให้ถูกต้อง</h2>
+        <p>คลิกคำศัพท์ภาษาอังกฤษก่อน แล้วคลิกความหมายภาษาไทยที่ถูกต้อง</p>
+      </div>
+      <div class="vocabBoard">
+        <div class="vocabColumn">
+          <h2>English</h2>
+          ${enButtons}
+        </div>
+        <div class="vocabColumn">
+          <h2>ภาษาไทย</h2>
+          ${thButtons}
+        </div>
+      </div>
+      <div id="vocabMsg" class="center" style="font-size:24px;font-weight:bold;margin-top:16px"></div>
+    </div>
+  `;
+}
+
+function selectEnglish(btn,word){
+  if(btn.classList.contains("correct")) return;
+  document.querySelectorAll(".vocabBtn:not(.correct)").forEach(b=>b.classList.remove("selected"));
+  btn.classList.add("selected");
+  selectedEnglish=btn;
+}
+
+function selectThai(btn,thai){
+  if(btn.classList.contains("correct")) return;
+
+  if(!selectedEnglish){
+    document.getElementById("vocabMsg").innerHTML="<span class='fail'>เลือกคำศัพท์ภาษาอังกฤษก่อนนะ</span>";
+    return;
+  }
+
+  if(selectedEnglish.dataset.key===btn.dataset.key){
+    selectedEnglish.classList.remove("selected");
+    selectedEnglish.classList.add("correct");
+    btn.classList.add("correct");
+    selectedEnglish.disabled=true;
+    btn.disabled=true;
+    matchedCount++;
+    document.getElementById("vocabMsg").innerHTML="<span class='success'>✅ ถูกต้อง!</span>";
+    playCorrect();
+    speakText("ถูกต้อง","th-TH");
+    selectedEnglish=null;
+
+    if(matchedCount>=3){
+      setTimeout(()=>{
+        document.getElementById("vocabMsg").innerHTML="<span class='success'>🎉 จับคู่ครบแล้ว ไปด่านต่อไป!</span><br><button onclick='continueDetectiveGame()'>ไปต่อ</button>";
+      },600);
+    }
+  }else{
+    const wrongEn=selectedEnglish;
+    const wrongTh=btn;
+    wrongEn.classList.add("wrong");
+    wrongTh.classList.add("wrong");
+    document.getElementById("vocabMsg").innerHTML="<span class='fail'>❌ ไม่ถูกต้อง</span>";
+    playWrong();
+    speakText("ไม่ถูกต้อง","th-TH");
+
+    setTimeout(()=>{
+      wrongEn.classList.remove("wrong","selected");
+      wrongTh.classList.remove("wrong");
+      selectedEnglish=null;
+    },1200);
+  }
+}
+
+function continueDetectiveGame(){
+  renderDetectiveGame();
+  loadDetectiveLevel();
+  startTimer();
+}
+
+function finishGame(){
+  clearInterval(timer);
+  playFinish();
+  const used=Math.floor((new Date()-startTime)/1000);
+  let medal="🥉 นักสืบฝึกหัด";
+  if(score>=40) medal="🥈 นักสืบมือเก่ง";
+  if(score>=48) medal="🥇 นักสืบทะเลลึกระดับเทพ";
+  mainCard.innerHTML=`
+    <h1>🏆 ภารกิจสำเร็จ</h1>
+    <div class="center">
+      <p style="font-size:58px">🦈 🦑 🐙 🪼 🐡 👑</p>
+      <h2>👤 ผู้เล่น: ${playerName}</h2>
+      <h2>🏫 ชั้นเรียน: ${classRoom}</h2>
+      <h2>🏆 คะแนนรวม: ${score} คะแนน</h2>
+      <h2>⏱️ เวลาที่ใช้: ${used} วินาที</h2>
+      <h2>${medal}</h2>
+      <button onclick="sendToGoogleForm(${used})">📤 ส่งคะแนนให้คุณครู</button>
+      <button class="backBtn" onclick="location.reload()">🔄 เล่นซ้ำ</button>
+      <p class="small">กด “เล่นซ้ำ” เพื่อกลับไปเริ่มใหม่ตั้งแต่หน้าแรก</p>
+    </div>
+  `;
+}
+
+function showTimeUp(){
+  clearInterval(timer);
+  playTimeUp();
+  const used=startTime?Math.floor((new Date()-startTime)/1000):0;
+  mainCard.innerHTML=`
+    <h1>⌛ หมดเวลา</h1>
+    <div class="center">
+      <h2>สรุปผลการเล่นทั้งหมด</h2>
+      <h2>👤 ผู้เล่น: ${playerName || "-"}</h2>
+      <h2>🏫 ชั้นเรียน: ${classRoom || "-"}</h2>
+      <h2>🎮 ผ่านแล้ว: ${levelIndex} / ${levels.length} ด่าน</h2>
+      <h2>🏆 คะแนนรวม: ${score} คะแนน</h2>
+      <h2>⏱️ เวลาที่ใช้: ${used} วินาที</h2>
+      <h2>พยายามต่อ?</h2>
+      <button onclick="location.reload()">พยายามต่อ</button>
+      <button class="backBtn" onclick="window.close()">ออก</button>
+      <p class="small">ถ้าปิดไม่ได้ ให้กดปิดแท็บนี้ได้เลย</p>
+    </div>
+  `;
+}
+
+function sendToGoogleForm(used){
+  const formURL="https://docs.google.com/forms/d/e/1FAIpQLScT0TKyyGGZ9Gh8weZS15hrCROWgRYvIZxXt2MiWijlQpmWww/viewform?usp=pp_url";
+  const url=formURL+
+    "&entry.2137004250="+encodeURIComponent(playerName)+
+    "&entry.1061073="+encodeURIComponent(classRoom)+
+    "&entry.976132659="+encodeURIComponent(score)+
+    "&entry.15613804="+encodeURIComponent(used+" วินาที");
+  window.open(url,"_blank");
+}
+
+document.addEventListener("input",function(e){
+  if(e.target.classList.contains("codeInput")){
+    e.target.value=e.target.value.replace(/[^0-9]/g,"");
+    if(e.target.value) playType();
+    if(e.target.value.length===1){
+      const inputs=[...document.querySelectorAll(".codeInput")];
+      const index=inputs.indexOf(e.target);
+      if(index<inputs.length-1) inputs[index+1].focus();
+    }
+  }
+});
+</script>
+
+
+
+<script>
+function openLessonPlan(){
+  var url = "https://drive.google.com/drive/folders/13Ni64aS8D4QJDoiWxbIeOub1CdpmRLXC";
+  var newWindow = window.open(url, "_blank", "noopener,noreferrer");
+  if(!newWindow){
+    window.location.href = url;
+  }
+}
+</script>
+
+</body>
+</html>
